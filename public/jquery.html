@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
+    <script>
+        // https://github.com/jakerella/jquery-mockjax
+
+        $.mockjax({
+            url: '/getData',
+            status: 200,
+            responseTime: 750,         
+            responseText: { username: 'Tommy001', age: 30 }
+        });
+    
+
+        console.log(1);
+        $.ajax('/getData', {
+            data: {name: 'Tommy001'},
+            // async: false,
+            success: function(data) {
+                console.log(data);
+            }
+        });
+        console.log(2);
+    
+    </script>
+</head>
+<body>
+</body>
+</html>

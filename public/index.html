@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios-mock-adapter@1.17.0/dist/axios-mock-adapter.min.js"></script>
+    <script>
+        // https://github.com/ctimmerm/axios-mock-adapter    
+
+
+        (async function() {
+            //*
+
+            var mock = new AxiosMockAdapter(axios);
+
+
+            mock.onGet('/getData', {params: {name: 'Mark'}}).reply(function(config) {
+                console.log(config.params.name);
+
+                return [200, {
+                    username: config.params.name,
+                    age: parseInt(Math.random() * 30)
+                }]
+            })
+            //*/
+
+
+            console.log(1);
+            var output = await axios.get('/getData', {params: { name: 'Mark' }})
+            console.log(output.data);
+            console.log(2);
+        })();
+
+
+    </script>
+</head>
+<body>
+</body>
+</html>
