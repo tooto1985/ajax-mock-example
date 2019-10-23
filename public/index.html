@@ -1,42 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/axios-mock-adapter@1.17.0/dist/axios-mock-adapter.min.js"></script>
-    <script>
-        // https://github.com/ctimmerm/axios-mock-adapter    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/axios-mock-adapter@1.17.0/dist/axios-mock-adapter.min.js"></script>
+  <script>
+    // https://github.com/ctimmerm/axios-mock-adapter    
+    /*
+    (async function() {
+        var mock = new AxiosMockAdapter(axios);
+        mock.onGet('/getData', {params: {name: 'Mark'}}).reply(function(config) {
+            return [200, {
+                username: config.params.name,
+                age: parseInt(Math.random() * 30)
+            }]
+        })
+        var output = await axios.get('/getData', {params: { name: 'Mark' }})
+        console.log(output.data);
+    })(); // sync
+    */
+
+      var mock = new AxiosMockAdapter(axios);
+      mock.onGet('/getData').reply(function(config) {
+        return new Promise(function(resolve, reject) {
+          setTimeout(function() {
+            resolve([200, {
+              username: config.params.name,
+              age: parseInt(Math.random() * 30)
+            }]);
+          }, 1000);
+        })
+      });
+      mock.onPost('/getPost').reply(function(config) {
+        return [200, {}]
+      });
+
+      mock.onGet('/network').reply(function(config) {
+        return [200, {}]
+      });
+
+      mock.onGet('/api').reply(function(config) {
+        return [200, [1,2,3]]
+      });
+      
+      //mock.restore(); //還原從server抓取(mock實體整個清除,無法再還原了)
+
+      //mock.resetHandlers(); //清除已註冊的mock路由
+      
+      //mock.reset(); // 包含 history
+
+      axios.get('/getData', {
+        params: {
+          name: 'Mark'
+        }
+      }).then(function(response) {
+        console.log(response.data);
+      });
 
 
-        (async function() {
-            //*
+      function jsonToQueryString(json) {
+        return   Object.keys(json).map(function(key) {
+            return encodeURIComponent(key) + '=' +
+              encodeURIComponent(json[key]);
+          }).join('&');
+      }
 
-            var mock = new AxiosMockAdapter(axios);
+      axios.post('/getPost', jsonToQueryString({
+        id: 5
+      })).then(function(response) {
+        console.log(response.data);
+      })
 
+      axios.get('/api').then(response => {
+        console.log(response.data)
+      })
 
-            mock.onGet('/getData', {params: {name: 'Mark'}}).reply(function(config) {
-                console.log(config.params.name);
-
-                return [200, {
-                    username: config.params.name,
-                    age: parseInt(Math.random() * 30)
-                }]
-            })
-            //*/
-
-
-            console.log(1);
-            var output = await axios.get('/getData', {params: { name: 'Mark' }})
-            console.log(output.data);
-            console.log(2);
-        })();
-
-
-    </script>
+ 
+  </script>
 </head>
+
 <body>
 </body>
+
 </html>
